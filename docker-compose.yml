@@ -1,0 +1,8 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.23
+    container_name: mosquitto
+    ports:
+      - "127.0.0.1:1883:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
