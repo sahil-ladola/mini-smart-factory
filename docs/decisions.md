@@ -68,7 +68,7 @@ Date: 2026-11-23 · Part: P1
 
 **Context:** MQTT (D1) needs a broker to route messages and a Python client library.
 
-**Decision:** Mosquitto (official eclipse-mosquitto:2 image) running in Docker via docker compose, and paho-mqtt 2.x as the Python client.
+**Decision:** Mosquitto (official eclipse-mosquitto image, pinned to 2.0.23) running in Docker via docker compose, and paho-mqtt 2.x as the Python client.
 
 **Alternatives considered:**
 - **Mosquitto Windows installer** - works, but would have to be redone in Docker for P2 and is not reproducible for others.
@@ -81,9 +81,10 @@ Date: 2026-11-23 · Part: P1
 - **aiomqtt / gmqtt** – async (asyncio) clients; adds a concept this project does not need yet.
 
 **Consequences:**
-- ➕ Small, free and widely used; the same broker runs on Windows now and in Docker later.
+- ➕ Small, free and widely used; runs in Docker from P1, and the same service is reused in P2's full docker compose setup.
 - ➕ paho-mqtt is the standard Python MQTT client with many examples.
 - ➖ Mosquitto 2.x needs an explicit listener and allow_anonymous in the config, otherwise connections from outside the container are refused. Anonymous access is acceptable only because the port is bound to localhost.
+- ➖ Image pinned to an exact version (2.0.23) for reproducibility; updates and security fixes must be applied manually by changing the tag.
 - ➖ Single broker, no clustering: a single point of failure (acceptable for a demo).
 - ➖ paho-mqtt 2.x changed its API from 1.x (e.g. `CallbackAPIVersion.VERSION2` is required),
   so many online tutorials are outdated.
